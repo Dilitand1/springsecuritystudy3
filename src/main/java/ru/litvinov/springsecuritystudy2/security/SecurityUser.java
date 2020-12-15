@@ -2,46 +2,73 @@ package ru.litvinov.springsecuritystudy2.security;
 
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import ru.litvinov.springsecuritystudy2.model.Status;
+import ru.litvinov.springsecuritystudy2.model.User;
 
 import java.util.Collection;
+import java.util.List;
 
 @Data
 public class SecurityUser implements UserDetails {
 
+    private final String username;
+    private final String password;
+    private final List<SimpleGrantedAuthority> authorityList;
+    private final boolean isActive;
+
+    public SecurityUser(String username, String password, List<SimpleGrantedAuthority> authorityList, boolean isActive) {
+        this.username = username;
+        this.password = password;
+        this.authorityList = authorityList;
+        this.isActive = isActive;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return authorityList;
     }
 
     @Override
     public String getPassword() {
-        return null;
+        return password;
     }
 
     @Override
     public String getUsername() {
-        return null;
+        return username;
     }
 
     @Override
     public boolean isAccountNonExpired() {
-        return false;
+        return isActive;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return false;
+        return isActive;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return false;
+        return isActive;
     }
 
     @Override
     public boolean isEnabled() {
-        return false;
+        return isActive;
     }
+
+    public static UserDetails fromUser(User user) {
+        return new org.springframework.security.core.userdetails.User(
+                user.getEmail(),
+                user.getPassword(),
+                user.getStatus().equals(Status.ACTIVE),
+                user.getStatus().equals(Status.ACTIVE),
+                user.getStatus().equals(Status.ACTIVE),
+                user.getStatus().equals(Status.ACTIVE),
+                user.getRole().getAuthorities());
+    }
+
 }

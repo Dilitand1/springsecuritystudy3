@@ -3,6 +3,7 @@ package ru.litvinov.springsecuritystudy2.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -42,6 +43,14 @@ public class SpringConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
+    protected DaoAuthenticationProvider daoAuthenticationProvider(){
+        DaoAuthenticationProvider daoAuthenticationProvider =
+                new DaoAuthenticationProvider();
+        daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
+    }
+
+    /*
+    @Bean
     @Override
     protected UserDetailsService userDetailsService() {
         return new InMemoryUserDetailsManager(
@@ -58,7 +67,7 @@ public class SpringConfig extends WebSecurityConfigurerAdapter {
                         .build()
         );
     }
-
+*/
     @Bean
     protected PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder(12);
